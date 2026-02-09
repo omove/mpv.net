@@ -1,4 +1,6 @@
 
+- The Japanese translation was updated. Thanks to the translators!
+
 # v7.1.2.0 (2026-01-09)
 
 - libmpv updated to v0.41 2026-01-09.
