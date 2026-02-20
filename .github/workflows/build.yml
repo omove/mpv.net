@@ -50,7 +50,7 @@ jobs:
             $url = "https://github.com/zhongfly/mpv-winbuild/releases/download/2026-02-20-f7ad4a5/mpv-dev-aarch64-20260220-git-f7ad4a5.7z"
           }
 
-          Invoke-WebRequest $url -OutFile libmpv.zip
+          Invoke-WebRequest $url -OutFile libmpv.7z
           & "C:\Program Files\7-Zip\7z.exe" x libmpv.7z -aoa -o"libmpv"
 
           Copy-Item libmpv\*\*.dll publish/${{ matrix.arch }} -Recurse -Force
@@ -64,7 +64,7 @@ jobs:
             $url = "https://mediaarea.net/download/binary/libmediainfo0/24.03/MediaInfo_DLL_24.03_Windows_ARM64_WithoutInstaller.7z"
           }
 
-          Invoke-WebRequest $url -OutFile mediainfo.zip
+          Invoke-WebRequest $url -OutFile mediainfo.7z
           & "C:\Program Files\7-Zip\7z.exe" x mediainfo.7z -aoa -o"mediainfo"
 
           Copy-Item mediainfo\*\MediaInfo.dll publish/${{ matrix.arch }} -Force
