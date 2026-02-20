@@ -28,11 +28,11 @@ jobs:
 
       # Restore
       - name: Restore
-        run: dotnet restore ./src/mpv.net.sln -r ${{ matrix.arch }}
+        run: dotnet restore ./src/MpvNet.sln -r ${{ matrix.arch }}
 
       # Publish
       - name: Publish ${{ matrix.arch }}
-        run: dotnet publish ./src/mpv.net/mpv.net.csproj `
+        run: dotnet publish ./src/MpvNet.Windows/MpvNet.Windows.csproj `
               -c Release `
               -r ${{ matrix.arch }} `
               --self-contained false `
