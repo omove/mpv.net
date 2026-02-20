@@ -41,8 +41,16 @@ jobs:
       - name: Create .mo files for localization
         shell: powershell
         run: |
-          Install-PackageProvider NuGet -Force
+          Register-PackageSource -Name "NuGet.org" -Location "https://api.nuget.org/v3/index.json" -ProviderName "NuGet"
           Install-Package Gettext.Tools -Force
+          # Add the tools to PATH
+          $env:Path = ((Get-Package Gettext.Tools).Source | Split-Path) + '\tools\bin;' + $env:Path
+
+          # Run the existing script that compiles .po → .mo
+          .\lang\create-mo-files.ps1
+
+          # Copy the resulting .mo files into the publish folder
+          Copy-Item .\lang\mo\* src\MpvNet.Windows\bin\Debug\lang -Recurse -Force
 
       - name: Download libmpv
         shell: powershell
