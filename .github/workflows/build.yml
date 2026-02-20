@@ -38,6 +38,43 @@ jobs:
               --self-contained false `
               -o publish/${{ matrix.arch }}
 
+      - name: Download libmpv
+        shell: powershell
+        run: |
+          if ("${{ matrix.arch }}" -eq "win-x64") {
+            $url = "https://sourceforge.net/projects/mpv-player-windows/files/libmpv/mpv-dev-x86_64.zip/download"
+          } else {
+            $url = "https://sourceforge.net/projects/mpv-player-windows/files/libmpv/mpv-dev-arm64.zip/download"
+          }
+
+          Invoke-WebRequest $url -OutFile libmpv.zip
+          Expand-Archive libmpv.zip -DestinationPath libmpv
+
+          Copy-Item libmpv\*\*.dll publish/${{ matrix.arch }} -Recurse -Force
+
+      - name: Download MediaInfo
+        shell: powershell
+        run: |
+          $url = "https://mediaarea.net/download/binary/libmediainfo/23.09/MediaInfo_DLL_23.09_Windows_x64.zip"
+
+          if ("${{ matrix.arch }}" -eq "win-arm64") {
+            $url = "https://mediaarea.net/download/binary/libmediainfo/23.09/MediaInfo_DLL_23.09_Windows_ARM64.zip"
+          }
+
+          Invoke-WebRequest $url -OutFile mediainfo.zip
+          Expand-Archive mediainfo.zip -DestinationPath mediainfo
+
+          Copy-Item mediainfo\*\MediaInfo.dll publish/${{ matrix.arch }} -Force
+
+      - name: Download mpvnet.com
+        shell: powershell
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://github.com/mpvnet-player/file-host/releases/download/tag/mpvnet.com.txt" `
+            -OutFile "mpvnet.com"
+
+          Copy-Item mpvnet.com publish/${{ matrix.arch }}/mpvnet.com -Force
+
       # Create Portable ZIP
       - name: Create Portable ZIP
         shell: powershell
