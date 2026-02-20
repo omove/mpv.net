@@ -1,93 +1,28 @@
-; ============================================
-; mpv.net Inno Setup Script
-; Matrix-compatible (x64 + arm64)
-; ============================================
 
 #define MyAppName "mpv.net"
-#define MyAppPublisher "mpv.net"
-#define MyAppURL "https://github.com/mpvnet-player/mpv.net"
-
-; Values passed from GitHub Actions via /D
-#ifndef MyAppVersion
-  #define MyAppVersion "0.0.0"
-#endif
-
-#ifndef SourceDir
-  #error SourceDir not defined. Pass via /DSourceDir=...
-#endif
-
-#ifndef Platform
-  #define Platform "x64"
-#endif
-
-
-; ============================================
-; Setup
-; ============================================
+#define MyAppExeName "mpvnet.exe"
+#define MyAppSourceDir "..\..\MpvNet.Windows\bin\Debug"
+#define MyAppVersion GetFileVersion("..\..\MpvNet.Windows\bin\Debug\mpvnet.exe")
 
 [Setup]
-AppId={{A7C5A9C1-6A63-4E8E-9F64-1D4F58A6A000}
+AppId={{9AA2B100-BEF3-44D0-B819-D8FC3C4D557D}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppPublisher={#MyAppPublisher}
-AppPublisherURL={#MyAppURL}
-AppSupportURL={#MyAppURL}
-AppUpdatesURL={#MyAppURL}
-
-DefaultDirName={pf}\{#MyAppName}
-DefaultGroupName={#MyAppName}
-
-OutputDir=Output
-OutputBaseFilename=mpv.net-{#MyAppVersion}-{#Platform}-setup
-
-Compression=lzma
-SolidCompression=yes
-WizardStyle=modern
-
-ArchitecturesAllowed={#Platform}
+AppPublisher=Frank Skare (stax76)
 ArchitecturesInstallIn64BitMode={#Platform}
-
-DisableProgramGroupPage=yes
-UninstallDisplayIcon={app}\mpvnet.exe
-
-
-; ============================================
-; Files
-; ============================================
-
-[Files]
-Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
-
-
-; ============================================
-; Icons
-; ============================================
+Compression=lzma2
+DefaultDirName={autopf}\{#MyAppName}
+OutputBaseFilename=mpv.net-v{#MyAppVersion}-setup-{#Platform}
+OutputDir=E:\Desktop
+DefaultGroupName={#MyAppName}
+SetupIconFile=..\..\MpvNet.Windows\mpv-icon.ico
+UninstallDisplayIcon={app}\{#MyAppExeName}
+PrivilegesRequired=admin
+PrivilegesRequiredOverridesAllowed=dialog
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\mpvnet.exe"
-Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\mpvnet.exe"; Tasks: desktopicon
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 
-
-; ============================================
-; Tasks
-; ============================================
-
-[Tasks]
-Name: "desktopicon"; Description: "Create a desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
-
-
-; ============================================
-; Run
-; ============================================
-
-[Run]
-Filename: "{app}\mpvnet.exe"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
-
-
-; ============================================
-; Uninstall
-; ============================================
-
-[UninstallDelete]
-Type: filesandordirs; Name: "{app}"
+[Files]
+Source: "{#MyAppSourceDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppSourceDir}\*"; DestDir: "{app}"; Excludes: "win-x64,win-arm64"; Flags: ignoreversion recursesubdirs createallsubdirs;
