@@ -1,16 +1,25 @@
 ; ============================================
 ; mpv.net Inno Setup Script
-; Supports x64 and arm64 (matrix compatible)
+; Matrix-compatible (x64 + arm64)
 ; ============================================
 
 #define MyAppName "mpv.net"
 #define MyAppPublisher "mpv.net"
 #define MyAppURL "https://github.com/mpvnet-player/mpv.net"
 
-; Values passed from GitHub Actions:
-#define MyAppVersion GetStringParam("MyAppVersion", "0.0.0")
-#define SourceDir GetStringParam("SourceDir", "")
-#define Platform GetStringParam("Platform", "x64")
+; Values passed from GitHub Actions via /D
+#ifndef MyAppVersion
+  #define MyAppVersion "0.0.0"
+#endif
+
+#ifndef SourceDir
+  #error SourceDir not defined. Pass via /DSourceDir=...
+#endif
+
+#ifndef Platform
+  #define Platform "x64"
+#endif
+
 
 ; ============================================
 ; Setup
@@ -41,13 +50,14 @@ ArchitecturesInstallIn64BitMode={#Platform}
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\mpvnet.exe
 
+
 ; ============================================
 ; Files
 ; ============================================
 
 [Files]
-; Take everything from the publish directory
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+
 
 ; ============================================
 ; Icons
@@ -56,8 +66,8 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdi
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\mpvnet.exe"
 Name: "{group}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"
-
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\mpvnet.exe"; Tasks: desktopicon
+
 
 ; ============================================
 ; Tasks
@@ -66,12 +76,14 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\mpvnet.exe"; Tasks: desktop
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
 
+
 ; ============================================
 ; Run
 ; ============================================
 
 [Run]
 Filename: "{app}\mpvnet.exe"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
+
 
 ; ============================================
 ; Uninstall
